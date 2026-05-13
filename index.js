@@ -4,8 +4,11 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const fs = require('fs');
 const cors = require('cors');
+require('dotenv').config();
 
-let secretKey = fs.readFileSync("./secret.txt","utf-8");
+const PORT = process.env.PORT || 8000;
+const mongoUri = process.env.MONGO_URI;
+const secretKey = process.env.NUT_SECRET;
 
 const userModel = require("./models/userModel");
 const foodModel = require("./models/foodModel");
@@ -13,7 +16,7 @@ const verifyToken = require("./verifyToken");
 const trackModel = require("./models/trackModel");
 
 
-mongoose.connect("mongodb://localhost:27017/nutrifier")
+mongoose.connect(process.env.MONGO_URI)
 .then(()=>{
     console.log("Connected to MongoDB at nutrifier");
 })
@@ -208,11 +211,13 @@ app.get("/track/:userId/:date",verifyToken,async (req,res)=>{
 
 })
 
-app.listen(8000,()=>{
-    console.log("Server is running on port 8000");
+app.listen(PORT,()=>{
+    console.log(`Server is running on port ${PORT}`);
 })
 
 
 // async (params) => {
     
 // }
+
+console.log(PORT)
