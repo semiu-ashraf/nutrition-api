@@ -16,7 +16,7 @@ const verifyToken = require("./verifyToken");
 const trackModel = require("./models/trackModel");
 
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(mongoUri)
 .then(()=>{
     console.log("Connected to MongoDB at nutrifier");
 })
@@ -220,4 +220,4 @@ app.listen(PORT,()=>{
     
 // }
 
-console.log(PORT)
+console.log(PORT , mongoUri)
