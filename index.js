@@ -50,6 +50,7 @@ app.post("/register",(req,res)=>{
                     })
                     .catch((err)=>{
                         console.log(err)
+                        res.status(500).send({message:"Error while registering user"})
                     })
                 }
                 else
