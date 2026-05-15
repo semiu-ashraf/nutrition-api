@@ -26,9 +26,7 @@ mongoose.connect(mongoUri)
 
 const app = express();
 app.use(express.json());
-app.use(cors({
-    origin:"*"
-}));
+app.use(cors());
 
 // user registration
 app.post("/register", async (req, res) => {
