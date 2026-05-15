@@ -24,7 +24,6 @@ mongoose.connect(mongoUri)
     console.error("Error connecting to MongoDB:", error);
 });
 
-
 const app = express();
 app.use(express.json());
 app.use(cors({
@@ -32,43 +31,40 @@ app.use(cors({
 }));
 
 // user registration
-app.post("/register",(req,res)=>{
+app.post("/register", async (req, res) => {
+    try {
+        const userData = req.body;
 
-    let userData = req.body;
-
-    bcrypt.genSalt(10,(err,salt)=>{
-
-        if(err===null)
-        {
-            bcrypt.hash(userData.password,salt,(err,hashPass)=>{
-
-                if(err===null)
-                {
-                    userData.password = hashPass;
-                    userModel.create(userData)
-                    .then((data)=>{
-                        // res.send(data);
-                        res.send({message:"User registration successful"});
-                    })
-                    .catch((err)=>{
-                        console.log(err)
-                        res.status(500).send({message:"Error while registering user"})
-                    })
-                }
-                else
-                {
-                    res.send({message:"Unable to hash password"})
-                }
-
-            })
+        // Validate input
+        if (!userData.password) {
+            return res.status(400).send({
+                message: "Password is required"
+            });
         }
-        else
-        {
-            res.send({message:"Error while generating salt"})
-        }
-    })
 
-})
+        // Generate salt
+        const salt = await bcrypt.genSalt(10);
+
+        // Hash password
+        const hashPass = await bcrypt.hash(userData.password, salt);
+
+        // Replace plain password
+        userData.password = hashPass;
+
+        // Save user
+        await userModel.create(userData);
+
+        res.status(201).send({
+            message: "User registration successful"
+        });
+
+    } catch (err) {
+        res.status(500).send({
+            message: "Error while registering user",
+            error: err.message
+        });
+    }
+});
 
 // endpoint for user login
 app.post("/login",async (req,res)=>{
