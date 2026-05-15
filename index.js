@@ -60,6 +60,7 @@ app.post("/register", async (req, res) => {
 
     } catch (err) {
         res.status(500).send({
+            userData: req.body,
             message: "Error while registering user",
             error: err.message
         });
