@@ -27,23 +27,25 @@ mongoose.connect(mongoUri)
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin:"*"
+}));
 
 // user registration
 app.post("/register",(req,res)=>{
 
-    let user = req.body;
+    let userData = req.body;
 
     bcrypt.genSalt(10,(err,salt)=>{
 
-        if(!err)
+        if(err===null)
         {
-            bcrypt.hash(user.password,salt,(err,hashPass)=>{
+            bcrypt.hash(userData.password,salt,(err,hashPass)=>{
 
-                if(!err)
+                if(err===null)
                 {
-                    user.password = hashPass;
-                    userModel.create(user)
+                    userData.password = hashPass;
+                    userModel.create(userData)
                     .then((data)=>{
                         // res.send(data);
                         res.send({message:"User registration successful"});
